@@ -1,0 +1,158 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "チップボット",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetBalanceIntent",
+                    "slots": [],
+                    "samples": [
+                        "残高は幾らですか",
+                        "私のXRP残高について",
+                        "何枚のXRPを所有していますか",
+                        "私のXRPチップボット残高は幾らですか"
+                    ]
+                },
+                {
+                    "name": "SendTipIntent",
+                    "slots": [
+                        {
+                            "name": "number_a",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_b",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_c",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_d",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "user_name",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "XRPを送信します",
+                        "X.R.Pを送信します",
+                        "チップを送信します",
+                        "チップを {user_name} へ送信して",
+                        "XRPを {user_name} へ送信して",
+                        "X r p を {user_name} へ送信して",
+                        "{number_a} てん {number_b} {number_c} {number_d} を送信して",
+                        "{number_a} てん {number_b} {number_c} を送信して",
+                        "{number_a} てん {number_b} を送信して",
+                        "{number_a} を送信して",
+                        "{number_a} てん {number_b} {number_c} {number_d} xrpを送信して",
+                        "{number_a} てん {number_b} {number_c} xrpを送信して",
+                        "{number_a} てん {number_b} xrpを送信して",
+                        "{number_a} xrpを送信してください",
+                        "{number_a} てん {number_b} {number_c} {number_d} x. r. p.を送信して",
+                        "{number_a} てん {number_b} {number_c} x. r. p.を送信して",
+                        "{number_a} てん {number_b} x. r. p.を送信して",
+                        "{number_a} x. r. p.を送信して",
+                        "xrpをチップして",
+                        "x. r. p.をチップして",
+                        "{user_name} へチップして",
+                        "xrpを {user_name} へチップして",
+                        "x. r. p. を {user_name} へチップして",
+                        "{number_a} てん {number_b} {number_c} {number_d} をチップして ",
+                        "{number_a} てん {number_b} {number_c} をチップして ",
+                        "{number_a} てん {number_b} をチップして ",
+                        "{number_a} をチップして ",
+                        "{number_a} てん {number_b} {number_c} {number_d} xrpをチップして",
+                        "{number_a} てん {number_b} {number_c} xrpをチップして",
+                        "{number_a} てん {number_b} xrpをチップして",
+                        "{number_a} xrpをチップして",
+                        "{number_a} てん {number_b} {number_c} {number_d} x. r. p.をチップして",
+                        "{number_a} てん {number_b} {number_c} x. r. p.をチップして",
+                        "{number_a} てん {number_b} x. r. p.をチップして",
+                        "{number_a} x. r. p.をチップして"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AmountIntent",
+                    "slots": [
+                        {
+                            "name": "number_a",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_b",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_c",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_d",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "{number_a} てん {number_b} {number_c} {number_d} ",
+                        "{number_a} てん {number_b} {number_c} ",
+                        "{number_a} てん {number_b} ",
+                        "{number_a}",
+                        "{number_a} てん {number_b} {number_c} {number_d} xrp",
+                        "{number_a} てん {number_b} {number_c} xrp",
+                        "{number_a} てん {number_b} xrp",
+                        "{number_a} xrp ",
+                        "{number_a} てん {number_b} {number_c} {number_d} x. r. p.",
+                        "{number_a} てん {number_b} {number_c} x. r. p.",
+                        "{number_a} てん {number_b} x. r. p.",
+                        "{number_a} x. r. p."
+                    ]
+                },
+                {
+                    "name": "UserNameIntent",
+                    "slots": [
+                        {
+                            "name": "user_name",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "{user_name} を検索して",
+                        "{user_name} を探して",
+                        "{user_name} を見つけて",
+                        "ユーザー名 {user_name} を検索して",
+                        "ユーザー名 {user_name} を探して",
+                        "ユーザー名 {user_name} を見つけて"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}

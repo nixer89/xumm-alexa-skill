@@ -1,0 +1,140 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "tip bot",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetBalanceIntent",
+                    "slots": [],
+                    "samples": [
+                        "mi saldo",
+                        "mi saldo XRP",
+                        "cuántos XRP tengo",
+                        "cuál es mi saldo XRP Tip Bot",
+                        "cuál es mi saldo"
+                    ]
+                },
+                {
+                    "name": "SendTipIntent",
+                    "slots": [
+                        {
+                            "name": "number_a",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_b",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_c",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_d",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "user_name",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "enviar xrp",
+                        "enviar x. r. p.",
+                        "enviar propina",
+                        "enviar una propina a {user_name}",
+                        "enviar xrp a {user_name}",
+                        "enviar x. r. p. a {user_name}",
+                        "enviar {number_a} coma {number_b} {number_c} {number_d} ",
+                        "enviar {number_a} coma {number_b} {number_c} ",
+                        "enviar {number_a} coma {number_b} ",
+                        "enviar {number_a} ",
+                        "enviar {number_a} coma {number_b} {number_c} {number_d} xrp",
+                        "enviar {number_a} coma {number_b} {number_c} xrp",
+                        "enviar {number_a} coma {number_b} xrp",
+                        "enviar {number_a} xrp",
+                        "enviar {number_a} coma {number_b} {number_c} {number_d} x. r. p.",
+                        "enviar {number_a} coma {number_b} {number_c} x. r. p.",
+                        "enviar {number_a} coma {number_b} x. r. p.",
+                        "enviar {number_a} x. r. p."
+                    ]
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AmountIntent",
+                    "slots": [
+                        {
+                            "name": "number_a",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_b",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_c",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "number_d",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "{number_a} coma {number_b} {number_c} {number_d} ",
+                        "{number_a} coma {number_b} {number_c} ",
+                        "{number_a} coma {number_b} ",
+                        "{number_a}",
+                        "{number_a} coma {number_b} {number_c} {number_d} xrp",
+                        "{number_a} coma {number_b} {number_c} xrp",
+                        "{number_a} coma {number_b} xrp",
+                        "{number_a} xrp ",
+                        "{number_a} coma {number_b} {number_c} {number_d} x. r. p.",
+                        "{number_a} coma {number_b} {number_c} x. r. p.",
+                        "{number_a} coma {number_b} x. r. p.",
+                        "{number_a} x. r. p."
+                    ]
+                },
+                {
+                    "name": "UserNameIntent",
+                    "slots": [
+                        {
+                            "name": "user_name",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "buscar {user_name}",
+                        "comprobar {user_name}",
+                        "buscar usuario {user_name}",
+                        "comprobar usuario {user_name}"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}
