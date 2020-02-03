@@ -69,7 +69,7 @@ const GetBalanceIntent = {
       console.log("GetBalanceIntent: " + JSON.stringify(handlerInput));
       try {
           if(await isReachable(TIPBOT_API_URL)) {        
-            let balance = await invokeBackend(TIPBOT_API_URL+"/action:balance/", {method: "POST", body: JSON.stringify({"token": TIPBOT_API_TOKEN})});
+            let balance = await invokeBackend(TIPBOT_API_URL+"/action:balance/", {method: "POST", body: JSON.stringify({"token": TIPBOT_API_TOKEN})}, "");
             console.log("balance response: " + JSON.stringify(balance));
             if(balance && balance.data && balance.data.balance && balance.data.balance.XRP) {
               console.log("localized amount: " + localizeAmount(locale,balance.data.balance.XRP));
@@ -302,7 +302,7 @@ async function sendTipViaXumm(handlerInput, amount, user) {
       //look for account and public destination tag of a user
       if(await isReachable(TIPBOT_BASE_URL)) {
         console.log("calling: " + TIPBOT_BASE_URL+"/u:"+user.u+"/n:"+user.n+"/f:json")
-        var userData = await invokeBackend(TIPBOT_BASE_URL+"/u:"+user.u+"/n:"+user.n+"/f:json", {method: "GET"});
+        var userData = await invokeBackend(TIPBOT_BASE_URL+"/u:"+user.u+"/n:"+user.n+"/f:json", {method: "GET"},"");
 
         console.log("user data: " + JSON.stringify(userData));
 
@@ -331,7 +331,7 @@ async function sendTipViaXumm(handlerInput, amount, user) {
 
             console.log("payload: " + JSON.stringify(xummPayload));
 
-            var payloadSubmit = await invokeBackend(XUMM_URL+"/payload", {method: "POST", body: JSON.stringify(xummPayload)});
+            var payloadSubmit = await invokeBackend(XUMM_URL+"/payload", {method: "POST", body: JSON.stringify(xummPayload)},handlerInput.requestEnvelope.session.application.applicationId);
 
             if(payloadSubmit) {
               console.log("received payload submit: " + JSON.stringify(payloadSubmit));
@@ -361,7 +361,7 @@ async function sendTipViaXumm(handlerInput, amount, user) {
                 var speechOutput = "";
                 //show QR and send card
                 if(supportsDisplay(handlerInput)) {
-                  speechOutput = "Please scan the displayed QR code to view your XUMM sign request.";
+                  speechOutput += "Please scan the displayed QR code to view your XUMM sign request.";
                 } else {
                   console.log("cannot support display. Generate Card!");
                   var cardText = "Please scan the QR code to open your XUMM sign request.";
@@ -376,7 +376,9 @@ async function sendTipViaXumm(handlerInput, amount, user) {
                   speechOutput+= "Open the Alexa app, navigate to the activity page and scan the shown QR code to open your XUMM sign request.";
                 }
 
+                console.log("cleanup")
                 cleanup(handlerInput);
+                console.log("cleanup finished")
 
                 return response
                 .speak(speechOutput)
@@ -805,10 +807,11 @@ const languageStrings = {
   
 };
 
-function invokeBackend(url, options) {
+function invokeBackend(url, options, applicationId) {
 
   options.headers = {
       "Content-Type": "application/json",
+      "Origin": applicationId
   };
 
   return fetch(url, options).then(res => res.json());
