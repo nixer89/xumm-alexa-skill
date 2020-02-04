@@ -47,6 +47,22 @@ const LaunchHandler = {
   handle(handlerInput) {
     const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
     console.log("LaunchRequest: " + JSON.stringify(handlerInput));
+
+    if(supportsDisplay(handlerInput)) {
+      console.log("add display stuff");
+      handlerInput.responseBuilder.addRenderTemplateDirective({
+        type : 'BodyTemplate6',
+        backButton: 'HIDDEN',
+        textContent: {
+          primaryText: {
+            text: "Welcome to the Alexa XUMM skill!",
+            type: "PlainText"
+          }
+        }
+      });
+    }
+    console.log("speaking out")
+
     return handlerInput.responseBuilder
     .speak(requestAttributes.t('WELCOME_MESSAGE'))
     .reprompt(requestAttributes.t('WELCOME_MESSAGE'))
@@ -134,15 +150,31 @@ const AmountIntent = {
     console.log("AmountIntent: " + JSON.stringify(handlerInput));
     var handleAmountResult = await handleAmount(handlerInput);
 
-    if(handleAmountResult.reprompt)
+    if(supportsDisplay(handlerInput)) {
+      handlerInput.responseBuilder.addRenderTemplateDirective({
+        type : 'BodyTemplate6',
+        backButton: 'hidden',
+        textContent: {
+          primaryText: {
+            text: handleAmountResult.speechOutput,
+            type: "PlainText"
+          }
+        }
+      });
+    }
+
+    if(handleAmountResult.reprompt) {
       return handlerInput.responseBuilder
-                .speak(handleAmountResult.speechOutput)
-                .reprompt(handleAmountResult.speechOutput)
-                .getResponse();
-    else
+            .speak(handleAmountResult.speechOutput)
+            .reprompt(handleAmountResult.speechOutput)
+            .getResponse();
+
+    } else {
       return handlerInput.responseBuilder
         .speak(handleAmountResult.speechOutput)
         .getResponse();
+    }
+      
   },
 };
 
@@ -180,6 +212,19 @@ const YesIntent = {
     if(isDialogState(handlerInput, DIALOG_STATE.USER_CONFIRMATION)) {
       //user confirmed -> handle amount. Do we have a valid amount already? then send tip confirmation. If not, ask for amount!
       var handleAmountResult = await handleAmount(handlerInput);
+
+      if(supportsDisplay(handlerInput)) {
+        handlerInput.responseBuilder.addRenderTemplateDirective({
+          type: 'BodyTemplate6',
+          backButton: 'hidden',
+          textContent: {
+            primaryText: {
+              text: handleAmountResult.speechOutput,
+              type: "PlainText"
+            }
+          }
+        });
+      }
 
       if(handleAmountResult.reprompt)
         return handlerInput.responseBuilder
@@ -270,6 +315,19 @@ function checkForNextUser(handlerInput) {
     attributes.lastQuestion = speechOutput;
     handlerInput.attributesManager.setSessionAttributes(attributes);
 
+    if(supportsDisplay(handlerInput)) {
+      handlerInput.responseBuilder.addRenderTemplateDirective({
+        type : 'BodyTemplate6',
+        backButton: 'hidden',
+        textContent: {
+          primaryText: {
+            text: speechOutput,
+            type: "PlainText"
+          }
+        }
+      });
+    }
+
     console.log("ask if this is the user!");
     return handlerInput.responseBuilder
             .speak(speechOutput)
@@ -319,7 +377,6 @@ async function sendTipViaXumm(handlerInput, amount, user) {
               },
               txjson: {
                     TransactionType: "Payment",
-                    Destination: "rPEPPER7kfTD9w2To4CQk6UCfuHM9c6GDY",
                     DestinationTag: destinationTag,
                     Fee: "12"
               }
@@ -331,7 +388,7 @@ async function sendTipViaXumm(handlerInput, amount, user) {
 
             console.log("payload: " + JSON.stringify(xummPayload));
 
-            var payloadSubmit = await invokeBackend(XUMM_URL+"/payload", {method: "POST", body: JSON.stringify(xummPayload)},handlerInput.requestEnvelope.session.application.applicationId);
+            var payloadSubmit = await invokeBackend(XUMM_URL+"/api/v1/platform/payload", {method: "POST", body: JSON.stringify(xummPayload)},handlerInput.requestEnvelope.session.application.applicationId);
 
             if(payloadSubmit) {
               console.log("received payload submit: " + JSON.stringify(payloadSubmit));
@@ -342,11 +399,13 @@ async function sendTipViaXumm(handlerInput, amount, user) {
                 console.log("can support display. Show QR!");
                 const title = 'Scan the QR code to open the XUMM payment request:';
                 const image = new Alexa.ImageHelper().addImageInstance(payloadSubmit.refs.qr_png).getImage();
+                //const background = new Alexa.ImageHelper().addImageInstance("https://s3-eu-west-1.amazonaws.com/xumm.skill.pictures/xumm_X_LARGE.png",'X_LARGE').getImage();
                 response.addRenderTemplateDirective({
                   type : 'BodyTemplate2',
                   backButton: 'hidden',
-                  title,
-                  image,
+                  title: title,
+                  //backgroundImage: background,
+                  image: image,
                 });
               }
 
@@ -559,12 +618,26 @@ function handleUserResult(handlerInput, userResult) {
   
   if(userResult.checkNextUser)
       return checkForNextUser(handlerInput);
-    else if(userResult.withAccountCard)
+  else {
+    if(supportsDisplay(handlerInput)) {
+      handlerInput.responseBuilder.addRenderTemplateDirective({
+        type : 'BodyTemplate6',
+        backButton: 'hidden',
+        textContent: {
+          primaryText: {
+            text: userResult.speechOutput,
+            type: "PlainText"
+          }
+        }
+      });
+    }
+
+    if(userResult.withAccountCard)
       return handlerInput.responseBuilder
-              .speak(userResult.speechOutput)
-              .withLinkAccountCard()
-              .getResponse();
-    else if(userResult.reprompt)
+            .speak(userResult.speechOutput)
+            .withLinkAccountCard()
+            .getResponse();
+    else if(userResult.reprompt) 
       return handlerInput.responseBuilder
                 .speak(userResult.speechOutput)
                 .reprompt(userResult.speechOutput)
@@ -573,6 +646,7 @@ function handleUserResult(handlerInput, userResult) {
       return handlerInput.responseBuilder
               .speak(userResult.speechOutput)
               .getResponse();
+  }
 }
 
 function processTipConfirmation(handlerInput) {

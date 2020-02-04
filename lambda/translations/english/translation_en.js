@@ -33,7 +33,7 @@ const enData = {
       RESPONSE_ERROR_300: 'Sorry, but you can\'t tip yourself. ',
       RESPONSE_ERROR_400: 'The destination user has disabled the XRP Tip Bot. ',
 
-      API_NOT_AVAILABLE: 'Sorry, but the XRPTipBot API is currently not available. Please try again later.'
+      API_NOT_AVAILABLE: 'Sorry, but the Backend API is currently not available. Please try again later.'
     },
 };
   
