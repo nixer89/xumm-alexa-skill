@@ -1,6 +1,6 @@
 {
   "name": "xumm-alexa-skill",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Alexa skill to send XRP tips to friends via XUMM",
   "main": "lambda/index.ts",
   "scripts": {

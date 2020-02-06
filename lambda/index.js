@@ -658,7 +658,7 @@ function processTipConfirmation(handlerInput) {
   //we have a valid number -> process tip confirmation
   var amount = attributes.amountToTip;
   var user = attributes.userinfo;
-  var speechOutput = requestAttributes.t('TIP_CONFIRMATION', {amount:localizeAmount(locale,amount), user: resolveProperName(user.s)});
+  var speechOutput = requestAttributes.t('TIP_CONFIRMATION', {amount:amount, user: resolveProperName(user.s)});
 
   attributes.dialogState = DIALOG_STATE.TIP_CONFIRMATION;
   attributes.lastQuestion = speechOutput;
