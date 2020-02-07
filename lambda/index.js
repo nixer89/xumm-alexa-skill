@@ -8,6 +8,7 @@ var levenshtein = require('fast-levenshtein');
 var eudex = require('talisman/metrics/distance/eudex');
 var Long = require('long');
 const {Translate} = require('@google-cloud/translate');
+const AWS = require('aws-sdk');
 
 // Instantiates a client
 const translate = new Translate({
@@ -15,6 +16,11 @@ const translate = new Translate({
   key: process.env.GOOGLE_API_KEY
 });
 
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_BUCKET,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_BUCKET,
+  region: 'eu-west-1'
+});
 
 //language properties
 var german_properties = require('./translations/german/translation_de');
@@ -409,6 +415,38 @@ async function sendTipViaXumm(handlerInput, amount, user) {
                 });
               }
 
+              console.log("downloading image");
+              var qrBuffer = new Buffer(await invokeBackendForImage(payloadSubmit.refs.qr_png, {method: 'GET'}));
+
+              console.log("qrBuffer: " + qrBuffer.toString());
+
+              s3.putObject({
+                Bucket: 'xumm-alexa-qr-codes',
+                Body: qrBuffer,
+                Key: payloadSubmit.uuid
+              })
+              .promise()
+              .then(response => {
+                console.log(`done! - `, response)
+                console.log(
+                  `The URL is ${s3.getSignedUrl('getObject', { Bucket: BUCKET, Key: imageRemoteName })}`
+                )
+              })
+              .catch(err => {
+                console.log('failed:', err)
+              })
+
+
+              let imageURL = await s3.getSignedUrl('getObject', { Bucket: BUCKET, Key: imageRemoteName });
+
+              var cardText = "Please scan the QR code to open your XUMM sign request.";
+              response.withStandardCard(
+                  'Xumm Payment Request',
+                  cardText,
+                  imageURL,
+                  imageURL
+                );
+
               if(payloadSubmit.pushed) {
                 console.log("push has been sent. Answer directly.")
                 //push has been sent!
@@ -420,19 +458,10 @@ async function sendTipViaXumm(handlerInput, amount, user) {
                 var speechOutput = "";
                 //show QR and send card
                 if(supportsDisplay(handlerInput)) {
-                  speechOutput += "Please scan the displayed QR code to view your XUMM sign request.";
+                  speechOutput += "Please scan the displayed QR code to view your XUMM sign request or ";
                 } else {
                   console.log("cannot support display. Generate Card!");
-                  var cardText = "Please scan the QR code to open your XUMM sign request.";
-                  response.withStandardCard({
-                    title:'Xumm Payment Request',
-                    text: cardText,
-                    image: {
-                      smallImageUrl: payloadSubmit.refs.qr_png,
-                      largeImageUrl: payloadSubmit.refs.qr_png
-                    }
-                  })
-                  speechOutput+= "Open the Alexa app, navigate to the activity page and scan the shown QR code to open your XUMM sign request.";
+                  speechOutput+= "Open alexa.amazon.com on another device than your phone where xumm is installed on. Navigate to the activity page and scan the shown QR code to open your XUMM sign request.";
                 }
 
                 console.log("cleanup")
@@ -889,6 +918,15 @@ function invokeBackend(url, options, applicationId) {
   };
 
   return fetch(url, options).then(res => res.json());
+}
+
+function invokeBackendForImage(url, options) {
+
+  options.headers = {
+      "Content-Type": "image/png",
+  };
+
+  return fetch(url, options).then(res => res.buffer());
 }
 
 async function translateUserName(locale, text) {
