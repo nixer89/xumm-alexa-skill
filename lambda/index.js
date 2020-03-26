@@ -370,20 +370,24 @@ async function sendTipViaXumm(handlerInput, amount, user) {
 
           if(await isReachable(XUMM_URL)) {
             console.log("host is reachable, sending payload request");
-            var xummPayload = {
-              frontendId: handlerInput.requestEnvelope.context.System.user.userId,
+            var xummPayload = {              
               options: {
-                  expire: 5
+                  frontendId: handlerInput.requestEnvelope.context.System.user.userId,
               },
-              txjson: {
+              payload: {
+                options: {
+                  expire: 5
+                },
+                txjson: {
                     TransactionType: "Payment",
                     DestinationTag: destinationTag,
                     Fee: "12"
+                }
               }
             }
 
             if(amount) {
-              xummPayload.txjson.Amount = (amount*1000000)+"";
+              xummPayload.payload.txjson.Amount = (amount*1000000)+"";
             }
 
             console.log("payload: " + JSON.stringify(xummPayload));
